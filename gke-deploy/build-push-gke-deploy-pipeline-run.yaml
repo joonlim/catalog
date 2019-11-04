@@ -1,0 +1,30 @@
+apiVersion: tekton.dev/v1alpha1
+kind: PipelineRun
+metadata:
+  name: build-push-gke-deploy-run
+spec:
+  pipelineRef:
+    name: build-push-gke-deploy
+  serviceAccountName: @SERVICE_ACCOUNT_NAME@
+  resources:
+  - name: source-repo
+    resourceSpec:
+      type: git
+      params:
+      - name: url
+        value: https://github.com/@GITHUB_USER@/catalog
+      - name: revision
+        value: @GIT_BRANCH@
+  params:
+  - name: pathToContext
+    value: gke-deploy/app
+  - name: pathToYamlConfigs
+    value: config
+  - name: imageUrl
+    value: gcr.io/@PROJECT_ID@/test-app
+  - name: imageTag
+    value: tekton-demo
+  - name: clusterName
+    value: @CLUSTER_NAME@
+  - name: clusterLocation
+    value: @CLUSTER_LOCATION@

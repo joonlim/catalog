@@ -1,0 +1,19 @@
+apiVersion: tekton.dev/v1alpha1
+kind: Task
+metadata:
+  name: gke-deploy
+spec:
+  inputs:
+    params:
+    - name: gke-deploy-image
+      description: gke-deploy CLI container image to run this task
+      default: gcr.io/cloud-builders/gke-deploy
+    - name: ARGS
+      type: array
+      description: gke-deploy CLI arguments to run
+      default: ["--help"]
+  steps:
+  - name: gke-deploy
+    image: "$(inputs.params.gke-deploy-image)"
+    command: ["/gke-deploy"]
+    args: ["$(inputs.params.ARGS)"]

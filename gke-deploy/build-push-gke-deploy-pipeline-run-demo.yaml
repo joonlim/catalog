@@ -1,0 +1,30 @@
+apiVersion: tekton.dev/v1alpha1
+kind: PipelineRun
+metadata:
+  name: build-push-gke-deploy-run
+spec:
+  pipelineRef:
+    name: build-push-gke-deploy
+  serviceAccountName: gke-deploy-sa
+  resources:
+  - name: source-repo
+    resourceSpec:
+      type: git
+      params:
+      - name: url
+        value: https://github.com/joonlim/catalog
+      - name: revision
+        value: test
+  params:
+  - name: pathToContext
+    value: gke-deploy/app
+  - name: pathToYamlConfigs
+    value: config
+  - name: imageUrl
+    value: gcr.io/cbd-test/test-app
+  - name: imageTag
+    value: tekton-demo
+  - name: clusterName
+    value: gke-deploy-test
+  - name: clusterLocation
+    value: us-east1-b
